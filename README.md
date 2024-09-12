@@ -101,6 +101,7 @@ quality = LOSSLESS
 #login_server_port = 8989
 #client_id =
 #client_secret =
+#auth_token = <your_auth_token>
 ```
 ### Plugin parameters
 * **quality:** Set to one of the following quality types.. Make sure to use a quality level supported by your current subscription.
@@ -152,6 +153,7 @@ at startup.
   * `BLOCK` (default): The user is REQUIRED to complete the OAuth login flow, otherwise mopidy will hang.
   * `AUTO`/`HACK`: Mopidy will start as usual but the user will be prompted to complete the auth login flow by visiting a link. The link is provided as a dummy track and as a log message.
 * **client_id, _secret (Optional):**: Tidal API `client_id`, `client_secret` can be overridden by the user if necessary.
+* **pkce_access_token (Optional):**: PKCE access token for authentication.
 
 ## Login
 Before TIDAL can be accessed from Mopidy, it is necessary to login, using either the OAuth or PKCE flow described below.

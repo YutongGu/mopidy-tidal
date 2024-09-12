@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+import json
 
 import logging
 import time
@@ -83,6 +84,13 @@ class TidalBackend(ThreadingActor, backend.Backend):
         self.auth_method = self._tidal_config["auth_method"]
         if self.auth_method == "PKCE":
             self.pkce_enabled = True
+        self.auth_token = self._tidal_config.get("auth_token")
+        if self.auth_token:
+            logger.info("Using auth_token from config {}".format(self.auth_token))
+            try:
+                self.auth_token = json.loads(self.auth_token)
+            except json.decoder.JSONDecodeError:
+                logger.warning("Failed to parse auth_token from config")
         self.login_server_port = self._tidal_config["login_server_port"]
         logger.info("PKCE login web server port: %s", self.login_server_port)
         self.login_method = self._tidal_config["login_method"]
@@ -124,10 +132,16 @@ class TidalBackend(ThreadingActor, backend.Backend):
 
     def _login(self):
         """Load session at startup or create a new session"""
-        if self._active_session.load_session_from_file(self.session_file_path):
+
+        if self.auth_token:
+            logger.info("Using provided PKCE access token")
+            self._active_session.process_auth_token(self.auth_token)
+            self._complete_login()
+        elif self._active_session.load_session_from_file(self.session_file_path):
             logger.info(
                 "Loaded existing TIDAL session from file %s...", self.session_file_path
             )
+
         if not self.session_valid:
             if not self.login_server_port:
                 # A. Default login, user must find login URL in Mopidy log
