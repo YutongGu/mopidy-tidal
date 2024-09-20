@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import logging
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import suppress
-from typing import TYPE_CHECKING, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, List, Optional, Tuple, Union, Set, Dict
 
 from mopidy import backend, models
 from mopidy.models import Album, Artist, Image, Playlist, Ref, SearchResult, Track
@@ -155,7 +155,7 @@ class TidalLibraryProvider(backend.LibraryProvider):
         return self.backend.session
 
     @login_hack(passthrough=True)
-    def get_distinct(self, field, query=None) -> set[str]:
+    def get_distinct(self, field, query=None) -> Set[str]:
         from mopidy_tidal.search import tidal_search
 
         logger.debug("Browsing distinct %s with query %r", field, query)
@@ -197,7 +197,7 @@ class TidalLibraryProvider(backend.LibraryProvider):
         return set()
 
     @login_hack
-    def browse(self, uri) -> list[Ref]:
+    def browse(self, uri) -> List[Ref]:
         logger.info("Browsing uri %s", uri)
         if not uri or not uri.startswith("tidal:"):
             return []
@@ -319,7 +319,7 @@ class TidalLibraryProvider(backend.LibraryProvider):
             logger.info("%r", ex)
 
     @login_hack
-    def get_images(self, uris) -> dict[str, list[Image]]:
+    def get_images(self, uris) -> Dict[str, List[Image]]:
         logger.info("Searching Tidal for images for %r" % uris)
         images_getter = ImagesGetter(self._session)
 
@@ -331,7 +331,7 @@ class TidalLibraryProvider(backend.LibraryProvider):
         return images
 
     @login_hack
-    def lookup(self, uris=None) -> list[Track]:
+    def lookup(self, uris=None) -> List[Track]:
         if isinstance(uris, str):
             uris = [uris]
         if not hasattr(uris, "__iter__"):

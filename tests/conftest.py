@@ -1,4 +1,4 @@
-from typing import Iterable, Optional, Sized
+from typing import Iterable, Optional, Sized, List
 from unittest.mock import Mock
 
 import pytest
@@ -124,7 +124,7 @@ def _make_tidal_track(
     )
 
 
-def _make_tidal_artist(*, name: str, id: int, top_tracks: Optional[list[Track]] = None):
+def _make_tidal_artist(*, name: str, id: int, top_tracks: Optional[List[Track]] = None):
     return _make_mock(
         mock=Mock(spec=Artist, name=next(artist_counter)),
         **{
@@ -139,7 +139,7 @@ def _make_tidal_album(
     *,
     name: str,
     id: int,
-    tracks: Optional[list[dict]] = None,
+    tracks: Optional[List[dict]] = None,
     artist: Optional[Artist] = None,
     **kwargs,
 ):
@@ -155,7 +155,7 @@ def _make_tidal_album(
     return album
 
 
-def _make_tidal_page(*, title: str, categories: list[PageCategory], api_path: str):
+def _make_tidal_page(*, title: str, categories: List[PageCategory], api_path: str):
     return Mock(spec=Page, title=title, categories=categories, api_path=api_path)
 
 

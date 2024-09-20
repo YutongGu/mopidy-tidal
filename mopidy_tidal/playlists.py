@@ -6,7 +6,7 @@ import operator
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from threading import Event, Timer
-from typing import TYPE_CHECKING, Collection, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Collection, List, Optional, Tuple, Union, Dict
 
 from mopidy import backend
 from mopidy.models import Playlist as MopidyPlaylist
@@ -132,8 +132,8 @@ class TidalPlaylistsProvider(backend.PlaylistsProvider):
 
         return False
 
-    @login_hack(list[Ref.playlist])
-    def as_list(self) -> list[Ref]:
+    @login_hack(List[Ref.playlist])
+    def as_list(self) -> List[Ref]:
         if not self._playlists_loaded_event.is_set():
             added_ids, _ = self._calculate_added_and_removed_playlist_ids()
             if added_ids:
@@ -202,7 +202,7 @@ class TidalPlaylistsProvider(backend.PlaylistsProvider):
         return self._get_or_refresh_playlist(uri)
 
     @login_hack
-    def refresh(self, *uris, include_items: bool = True) -> dict[str, MopidyPlaylist]:
+    def refresh(self, *uris, include_items: bool = True) -> Dict[str, MopidyPlaylist]:
         if uris:
             logger.info("Looking up playlists: %r", uris)
         else:

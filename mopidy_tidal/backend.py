@@ -5,7 +5,7 @@ import logging
 import time
 from concurrent.futures import Future
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional, Union, Dict
 
 from mopidy import backend
 from pykka import ThreadingActor
@@ -200,7 +200,7 @@ class TidalBackend(ThreadingActor, backend.Backend):
         if self.pkce_enabled:
             try:
                 # Query for auth tokens
-                json: dict[
+                json: Dict[
                     str, Union[str, int]
                 ] = self._active_session.pkce_get_auth_token(url_redirect)
                 # Parse and set tokens.
