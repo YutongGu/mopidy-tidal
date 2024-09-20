@@ -381,7 +381,7 @@ class TidalLibraryProvider(backend.LibraryProvider):
             getattr(self, cache_name).update(new_data)
 
         self._track_cache.update({track.uri: track for track in tracks})
-        logger.info("Returning %d tracks", len(tracks))
+        logger.debug("Returning %d tracks", len(tracks))
         return tracks
 
     @classmethod
